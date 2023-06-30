@@ -1,4 +1,4 @@
-package com.example.week1.model
+package com.example.week1.data
 
 import androidx.annotation.DrawableRes
 
