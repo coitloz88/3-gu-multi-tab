@@ -8,6 +8,7 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -56,8 +57,15 @@ class ContactFragment : Fragment() {
         }
 
         val contactList = getContacts()
+        val adapter = ContactsAdapter(contactList)
         binding.rvContacts.layoutManager = LinearLayoutManager(activity)
-        binding.rvContacts.adapter = ContactsAdapter(contactList)
+        binding.rvContacts.adapter = adapter
+        adapter.itemClick = object: ContactsAdapter.ItemClick {
+            override fun onClick(view: View, position: Int) {
+                Toast.makeText(activity, contactList[position].number, Toast.LENGTH_LONG).show()
+            }
+        }
+
         return view
     }
 
@@ -81,6 +89,7 @@ class ContactFragment : Fragment() {
                         contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
                     val image =
                         contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Photo.PHOTO))
+
                     contactList.add(Contact(id.toInt(), name, phoneNumber, null))
                 } catch (e: NumberFormatException) {
                     Log.e("contact fragment", e.toString())
