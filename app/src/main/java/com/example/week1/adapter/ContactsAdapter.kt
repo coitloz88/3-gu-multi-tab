@@ -18,6 +18,7 @@ class ContactsAdapter(val contactList: ArrayList<Contact>) :
     inner class Holder(val binding: ContactItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val name = binding.contactName
         val image = binding.contactImage
+        val number = binding.contactPhonenum
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
@@ -35,7 +36,7 @@ class ContactsAdapter(val contactList: ArrayList<Contact>) :
         }
 
         holder.name.text = contactList[position].name
-
+        holder.number.text = contactList[position].number
         val image = contactList[position].image
         if(image != null){
             holder.image.setImageResource(image)
