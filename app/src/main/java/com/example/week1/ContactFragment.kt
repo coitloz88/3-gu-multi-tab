@@ -1,14 +1,20 @@
 package com.example.week1
 
+import android.content.pm.PackageManager
 import android.os.Bundle
+import android.provider.ContactsContract
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
+import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.week1.adapter.ContactsAdapter
 import com.example.week1.data.Contact
 import com.example.week1.databinding.FragmentContactBinding
+import java.lang.NumberFormatException
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -43,10 +49,13 @@ class ContactFragment : Fragment() {
         _binding = FragmentContactBinding.inflate(inflater, container, false)
         val view = binding.root
 
-        val contactList = ArrayList<Contact>()
-        contactList.add(Contact(1, "유저1", R.drawable.image_contact_manggom))
-        contactList.add(Contact(2, "유저2", null))
+        // 연락처 조회를 위한 permission 확인
+        val status = ContextCompat.checkSelfPermission(requireContext(), "android.permission.READ_CONTACTS")
+        if(status == PackageManager.PERMISSION_DENIED) {
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf<String>("android.permission.READ_CONTACTS"), 100)
+        }
 
+        val contactList = getContacts()
         binding.rvContacts.layoutManager = LinearLayoutManager(activity)
         binding.rvContacts.adapter = ContactsAdapter(contactList)
         return view
@@ -55,6 +64,34 @@ class ContactFragment : Fragment() {
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun getContacts(): ArrayList<Contact> {
+        val contactList = ArrayList<Contact>()
+
+        val contactCursor = activity?.contentResolver!!.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,null, null)
+        if (contactCursor != null) {
+            while(contactCursor.moveToNext()) {
+                try {
+                    val id =
+                        contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.CONTACT_ID))
+                    val name =
+                        contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.DISPLAY_NAME))
+                    val phoneNumber =
+                        contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
+                    val image =
+                        contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Photo.PHOTO))
+                    contactList.add(Contact(id.toInt(), name, phoneNumber, null))
+                } catch (e: NumberFormatException) {
+                    Log.e("contact fragment", e.toString())
+                } catch (e: IllegalArgumentException) {
+                    Log.e("contact fragment", e.toString())
+                }
+            }
+            contactCursor.close()
+        }
+
+        return contactList
     }
 
     companion object {
