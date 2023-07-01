@@ -10,11 +10,6 @@ import com.example.week1.databinding.ContactItemBinding
 
 class ContactsAdapter(val contactList: ArrayList<Contact>) :
     RecyclerView.Adapter<ContactsAdapter.Holder>() {
-    interface ItemClick {
-        fun onClick(view: View, position: Int)
-    }
-    var itemClick: ItemClick? = null
-
     inner class Holder(val binding: ContactItemBinding) : RecyclerView.ViewHolder(binding.root) {
         val name = binding.contactName
         val image = binding.contactImage
@@ -31,10 +26,6 @@ class ContactsAdapter(val contactList: ArrayList<Contact>) :
     }
 
     override fun onBindViewHolder(holder: ContactsAdapter.Holder, position: Int) {
-        holder.itemView.setOnClickListener {
-            itemClick?.onClick(it, position)
-        }
-
         holder.name.text = contactList[position].name
         holder.number.text = contactList[position].number
         val image = contactList[position].image

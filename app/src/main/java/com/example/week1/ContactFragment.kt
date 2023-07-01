@@ -60,12 +60,6 @@ class ContactFragment : Fragment() {
         val adapter = ContactsAdapter(contactList)
         binding.rvContacts.layoutManager = LinearLayoutManager(activity)
         binding.rvContacts.adapter = adapter
-        adapter.itemClick = object: ContactsAdapter.ItemClick {
-            override fun onClick(view: View, position: Int) {
-                Toast.makeText(activity, contactList[position].number, Toast.LENGTH_LONG).show()
-            }
-        }
-
         return view
     }
 
