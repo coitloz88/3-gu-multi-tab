@@ -30,7 +30,7 @@ class ContactsAdapter(val contactList: ArrayList<Contact>) :
         holder.number.text = contactList[position].number
         val image = contactList[position].image
         if(image != null){
-            holder.image.setImageResource(image)
+            holder.image.setImageDrawable(image)
         } else {
             holder.image.setImageResource(R.drawable.image_contact_default)
         }
