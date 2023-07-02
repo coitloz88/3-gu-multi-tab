@@ -1,0 +1,38 @@
+package com.example.week1.adapter
+
+import android.view.LayoutInflater
+import android.view.View
+import android.view.ViewGroup
+import androidx.recyclerview.widget.RecyclerView
+import com.example.week1.R
+import com.example.week1.data.Contact
+import com.example.week1.databinding.ContactItemBinding
+
+class ContactsAdapter(val contactList: ArrayList<Contact>) :
+    RecyclerView.Adapter<ContactsAdapter.Holder>() {
+    inner class Holder(val binding: ContactItemBinding) : RecyclerView.ViewHolder(binding.root) {
+        val name = binding.contactName
+        val image = binding.contactImage
+        val number = binding.contactPhonenum
+    }
+
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): Holder {
+        val binding = ContactItemBinding.inflate(LayoutInflater.from(parent.context), parent, false)
+        return Holder(binding)
+    }
+
+    override fun getItemCount(): Int {
+        return contactList.size
+    }
+
+    override fun onBindViewHolder(holder: ContactsAdapter.Holder, position: Int) {
+        holder.name.text = contactList[position].name
+        holder.number.text = contactList[position].number
+        val image = contactList[position].image
+        if(image != null){
+            holder.image.setImageDrawable(image)
+        } else {
+            holder.image.setImageResource(R.drawable.image_contact_default)
+        }
+    }
+}
