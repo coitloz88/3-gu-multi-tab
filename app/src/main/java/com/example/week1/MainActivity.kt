@@ -8,7 +8,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 class MainActivity : AppCompatActivity(){
     private val contactFragment by lazy { ContactFragment() }
     private val galleryFragment by lazy { GalleryFragment() }
-    private val freeFragment by lazy { FreeFragment() }
+    private val currencyFragment by lazy { CurrencyFragment() }
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
@@ -28,7 +28,7 @@ class MainActivity : AppCompatActivity(){
                         changeFragment(galleryFragment)
                     }
                     R.id.free_tab -> {
-                        changeFragment(freeFragment)
+                        changeFragment(currencyFragment)
                     }
                 }
                 true
