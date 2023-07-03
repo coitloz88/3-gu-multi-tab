@@ -1,6 +1,7 @@
 package com.example.week1
 
 import android.os.Bundle
+import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
@@ -55,7 +56,7 @@ class CurrencyFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-
+                    Log.d("CurrencyFragment", "selected code: " + spinner.selectedItem.toString())
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {

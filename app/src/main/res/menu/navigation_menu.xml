@@ -16,6 +16,6 @@
         android:id="@+id/free_tab"
         app:showAsAction="ifRoom"
         android:enabled="true"
-        android:icon="@drawable/ic_free"
+        android:icon="@drawable/ic_currency"
         android:title="@string/free_title" />
 </menu>
