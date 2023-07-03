@@ -28,15 +28,15 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_convert_from"
@@ -50,7 +50,7 @@
                         android:id="@+id/spinner_from"
                         android:layout_width="match_parent"
                         android:layout_height="48dp"
-                        android:layout_marginEnd="8dp"/>
+                        android:layout_marginEnd="8dp" />
                 </LinearLayout>
 
                 <LinearLayout
@@ -77,31 +77,29 @@
             <LinearLayout
                 android:id="@+id/divider"
                 android:layout_width="match_parent"
-                android:layout_height="24dp"
-                android:orientation="horizontal"
-                >
+                android:layout_height="64dp"
+                android:orientation="horizontal">
 
                 <View
-                    android:background="#999999"
                     android:layout_width="match_parent"
                     android:layout_height="2dp"
                     android:layout_gravity="center"
-                    />
+                    android:background="#CCCCCC" />
             </LinearLayout>
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_weight="1"
-                android:orientation="horizontal"
-                android:baselineAligned="false">
+                android:baselineAligned="false"
+                android:orientation="horizontal">
 
                 <LinearLayout
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginEnd="8dp"
                     android:layout_weight="1"
-                    android:orientation="vertical"
-                    android:layout_marginEnd="8dp">
+                    android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_amount"
@@ -131,7 +129,7 @@
                         android:id="@+id/tv_rate"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:text="@string/conversion_rate"
+                        android:text="@string/conversion_result"
                         android:textSize="18sp"
                         android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
@@ -153,6 +151,16 @@
             </LinearLayout>
 
         </LinearLayout>
+
+        <Button
+            android:id="@+id/button"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginTop="16dp"
+            android:text="@string/get_result_of_conversion"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/layout_currency_info" />
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </FrameLayout>

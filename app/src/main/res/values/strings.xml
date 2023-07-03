@@ -8,7 +8,8 @@
     <string name="convert_from">Convert From</string>
     <string name="convert_to">Convert To</string>
     <string name="amount_to_convert">Amount To Convert</string>
-    <string name="conversion_rate">Conversion Rate</string>
+    <string name="conversion_result">Conversion Result</string>
     <string name="hint_amount_to_convert">값을 입력하세요</string>
     <string name="zero">0</string>
+    <string name="get_result_of_conversion">Get Result of Conversion</string>
 </resources>
