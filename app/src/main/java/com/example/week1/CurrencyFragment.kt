@@ -9,6 +9,12 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.week1.databinding.FragmentCurrencyBinding
+import com.example.week1.retrofit.CurrencyService
+import com.example.week1.retrofit.RetrofitClass
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
+import retrofit2.create
 
 // TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
@@ -82,12 +88,33 @@ class CurrencyFragment : Fragment() {
 
             }
         }
+
+        binding.confirmButton.setOnClickListener {
+            getConversionRate("usd", "krw")
+        }
+
         return view
     }
 
     override fun onDestroyView() {
         super.onDestroyView()
         _binding = null
+    }
+
+    fun getConversionRate(from: String, to: String): Double {
+        val apiService = RetrofitClass.getInstance().create(CurrencyService::class.java)
+        apiService.getUsdToKrw()?.enqueue(object: Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(response.isSuccessful) {
+                    Log.d(TAG, response.body().toString())
+                }
+            }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "failed to get data from URL")
+            }
+        })
+        return 0.0
     }
 
     companion object {
@@ -108,5 +135,7 @@ class CurrencyFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+        private const val TAG = "CurrencyFragment"
     }
 }
