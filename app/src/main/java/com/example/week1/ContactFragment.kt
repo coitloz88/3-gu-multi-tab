@@ -1,5 +1,6 @@
 package com.example.week1
 
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.graphics.Bitmap
 import android.graphics.ImageDecoder
@@ -15,7 +16,6 @@ import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -66,8 +66,16 @@ class ContactFragment : Fragment() {
 
         val contactList = getContacts()
         val adapter = ContactsAdapter(contactList)
+        adapter.itemClick = object : ContactsAdapter.ItemClick {
+            override fun onClick(view: View, position: Int) {
+                val intent = Intent(requireActivity(), ContactDetailActivity::class.java)
+                intent.putExtra("id", contactList[position].id)
+                startActivityForResult(intent, 101)
+            }
+        }
         binding.rvContacts.layoutManager = LinearLayoutManager(activity)
         binding.rvContacts.adapter = adapter
+
         return view
     }
 
