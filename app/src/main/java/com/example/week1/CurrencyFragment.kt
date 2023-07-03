@@ -11,15 +11,12 @@ import android.widget.ArrayAdapter
 import com.example.week1.databinding.FragmentCurrencyBinding
 import com.example.week1.retrofit.CurrencyService
 import com.example.week1.retrofit.RetrofitClass
+import org.json.JSONObject
 import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
-import retrofit2.create
 
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -27,19 +24,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class CurrencyFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
     private var _binding: FragmentCurrencyBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -62,7 +51,7 @@ class CurrencyFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    Log.d("CurrencyFragment", "selected code: " + spinner.selectedItem.toString())
+                    Log.d(TAG, "selected from code: " + spinner.selectedItem.toString())
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -80,7 +69,7 @@ class CurrencyFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-
+                    Log.d(TAG, "selected to code: " + spinner.selectedItem.toString())
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -90,7 +79,7 @@ class CurrencyFragment : Fragment() {
         }
 
         binding.confirmButton.setOnClickListener {
-            getConversionRate("usd", "krw")
+            calculateAmountResult("usd", "krw", 1.0)
         }
 
         return view
@@ -101,12 +90,14 @@ class CurrencyFragment : Fragment() {
         _binding = null
     }
 
-    fun getConversionRate(from: String, to: String): Double {
+    private fun calculateAmountResult(from: String, to: String, inputAmount: Double) {
         val apiService = RetrofitClass.getInstance().create(CurrencyService::class.java)
-        apiService.getUsdToKrw()?.enqueue(object: Callback<String>{
+        apiService.getExchangeRate("$from/$to")?.enqueue(object: Callback<String>{
             override fun onResponse(call: Call<String>, response: Response<String>) {
                 if(response.isSuccessful) {
-                    Log.d(TAG, response.body().toString())
+                    val jsonObject = JSONObject(response.body().toString())
+                    val rate = jsonObject.getDouble(to)
+                    binding.tvResult.text = (rate * inputAmount).toString()
                 }
             }
 
@@ -114,28 +105,9 @@ class CurrencyFragment : Fragment() {
                 Log.e(TAG, "failed to get data from URL")
             }
         })
-        return 0.0
     }
 
     companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FreeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CurrencyFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
-                }
-            }
-
         private const val TAG = "CurrencyFragment"
     }
 }
