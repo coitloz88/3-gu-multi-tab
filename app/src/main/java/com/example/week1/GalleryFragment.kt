@@ -15,6 +15,11 @@ import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.example.week1.adapter.GalleryAdapter
 import com.example.week1.databinding.FragmentGalleryBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 
 
 // TODO: Rename parameter arguments, choose names that match
@@ -64,8 +69,13 @@ class GalleryFragment : Fragment() {
             )
         }
 
-        binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
-        binding.recyclerView.adapter = GalleryAdapter(getImagesFromPhone())
+        CoroutineScope(IO).launch {
+            val imageList = getImagesFromPhone()
+            withContext(Main) {
+                binding.recyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
+                binding.recyclerView.adapter = GalleryAdapter(imageList)
+            }
+        }
 
         return view
     }
@@ -75,7 +85,7 @@ class GalleryFragment : Fragment() {
         _binding = null
     }
 
-    private fun getImagesFromPhone(): List<String> {
+    private suspend fun getImagesFromPhone(): List<String> {
         val images = mutableListOf<String>()
         val projection = arrayOf(MediaStore.Images.Media.DATA)
         val cursor = requireActivity().contentResolver.query(
@@ -94,13 +104,10 @@ class GalleryFragment : Fragment() {
             cursor.close()
         }
 
-        Log.d(TAG, images.size.toString())
-
         return images
     }
 
     companion object {
         private const val PERMISSION_REQUEST_CODE = 1
-        private const val TAG = "GalleryFragment"
     }
 }
