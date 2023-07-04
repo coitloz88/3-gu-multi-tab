@@ -9,11 +9,14 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import com.example.week1.databinding.FragmentCurrencyBinding
+import com.example.week1.retrofit.CurrencyService
+import com.example.week1.retrofit.RetrofitClass
+import org.json.JSONObject
+import retrofit2.Call
+import retrofit2.Callback
+import retrofit2.Response
 
-// TODO: Rename parameter arguments, choose names that match
 // the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-private const val ARG_PARAM1 = "param1"
-private const val ARG_PARAM2 = "param2"
 
 /**
  * A simple [Fragment] subclass.
@@ -21,19 +24,11 @@ private const val ARG_PARAM2 = "param2"
  * create an instance of this fragment.
  */
 class CurrencyFragment : Fragment() {
-    // TODO: Rename and change types of parameters
-    private var param1: String? = null
-    private var param2: String? = null
-
     private var _binding: FragmentCurrencyBinding? = null
     private val binding get() = _binding!!
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        arguments?.let {
-            param1 = it.getString(ARG_PARAM1)
-            param2 = it.getString(ARG_PARAM2)
-        }
     }
 
     override fun onCreateView(
@@ -56,7 +51,7 @@ class CurrencyFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-                    Log.d("CurrencyFragment", "selected code: " + spinner.selectedItem.toString())
+                    Log.d(TAG, "selected from code: " + spinner.selectedItem.toString())
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -74,7 +69,7 @@ class CurrencyFragment : Fragment() {
                     position: Int,
                     id: Long
                 ) {
-
+                    Log.d(TAG, "selected to code: " + spinner.selectedItem.toString())
                 }
 
                 override fun onNothingSelected(p0: AdapterView<*>?) {
@@ -82,6 +77,11 @@ class CurrencyFragment : Fragment() {
 
             }
         }
+
+        binding.confirmButton.setOnClickListener {
+            calculateAmountResult("usd", "krw", 1.0)
+        }
+
         return view
     }
 
@@ -90,23 +90,24 @@ class CurrencyFragment : Fragment() {
         _binding = null
     }
 
-    companion object {
-        /**
-         * Use this factory method to create a new instance of
-         * this fragment using the provided parameters.
-         *
-         * @param param1 Parameter 1.
-         * @param param2 Parameter 2.
-         * @return A new instance of fragment FreeFragment.
-         */
-        // TODO: Rename and change types and number of parameters
-        @JvmStatic
-        fun newInstance(param1: String, param2: String) =
-            CurrencyFragment().apply {
-                arguments = Bundle().apply {
-                    putString(ARG_PARAM1, param1)
-                    putString(ARG_PARAM2, param2)
+    private fun calculateAmountResult(from: String, to: String, inputAmount: Double) {
+        val apiService = RetrofitClass.getInstance().create(CurrencyService::class.java)
+        apiService.getExchangeRate("$from/$to")?.enqueue(object: Callback<String>{
+            override fun onResponse(call: Call<String>, response: Response<String>) {
+                if(response.isSuccessful) {
+                    val jsonObject = JSONObject(response.body().toString())
+                    val rate = jsonObject.getDouble(to)
+                    binding.tvResult.text = (rate * inputAmount).toString()
                 }
             }
+
+            override fun onFailure(call: Call<String>, t: Throwable) {
+                Log.e(TAG, "failed to get data from URL")
+            }
+        })
+    }
+
+    companion object {
+        private const val TAG = "CurrencyFragment"
     }
 }
