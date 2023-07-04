@@ -1,5 +1,6 @@
 package com.example.week1.adapter
 
+import android.app.Activity
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -7,8 +8,9 @@ import androidx.recyclerview.widget.RecyclerView
 import com.example.week1.R
 import com.example.week1.data.Contact
 import com.example.week1.databinding.ContactItemBinding
+import com.example.week1.utils.getDrawableFromUri
 
-class ContactsAdapter(val contactList: ArrayList<Contact>) :
+class ContactsAdapter(private val contactList: ArrayList<Contact>, private val activity: Activity) :
     RecyclerView.Adapter<ContactsAdapter.Holder>() {
     interface ItemClick {
         fun onClick(view: View, position: Int)
@@ -38,9 +40,12 @@ class ContactsAdapter(val contactList: ArrayList<Contact>) :
 
         holder.name.text = contactList[position].name
         holder.number.text = contactList[position].number
-        val image = contactList[position].image
-        if(image != null){
-            holder.image.setImageDrawable(image)
+        if(contactList[position].imageUri != null){
+            holder.image.setImageDrawable(contactList[position].imageUri?.let {
+                getDrawableFromUri(activity,
+                    it
+                )
+            })
         } else {
             holder.image.setImageResource(R.drawable.image_contact_default)
         }

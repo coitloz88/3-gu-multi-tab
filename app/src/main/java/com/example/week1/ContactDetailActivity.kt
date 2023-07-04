@@ -2,9 +2,9 @@ package com.example.week1
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import android.view.MenuItem
 import com.example.week1.databinding.ActivityContactDetailBinding
+import com.example.week1.utils.getDrawableFromUri
 
 class ContactDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContactDetailBinding
@@ -16,14 +16,19 @@ class ContactDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
-        val id = intent.getIntExtra("id", 0)
+        val name = intent.getStringExtra("name")
+        val number = intent.getStringExtra("number")
+        val imageUri = intent.getStringExtra("imageUri")
 
-        if(id == 0) {
-            Log.e(Companion.TAG, "id is 0!!")
-            finish()
+        binding.tvName.text = name
+        binding.tvPhoneNumber.text = number
+
+        if(imageUri != null) {
+            binding.ivProfile.setImageDrawable(getDrawableFromUri(this, imageUri))
+        } else {
+            binding.ivProfile.setImageResource(R.drawable.image_contact_default)
         }
 
-        Log.d(TAG, "id: $id")
     }
 
     override fun onOptionsItemSelected(item: MenuItem): Boolean {
@@ -39,9 +44,5 @@ class ContactDetailActivity : AppCompatActivity() {
     override fun onBackPressed() {
         super.onBackPressed()
         finish()
-    }
-
-    companion object {
-        private const val TAG = "ContactDetailActivity"
     }
 }
