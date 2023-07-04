@@ -15,6 +15,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.week1.adapter.ContactsAdapter
 import com.example.week1.data.Contact
 import com.example.week1.databinding.FragmentContactBinding
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.Dispatchers.Main
+import kotlinx.coroutines.launch
+import kotlinx.coroutines.withContext
 import java.lang.NumberFormatException
 
 // TODO: Rename parameter arguments, choose names that match
@@ -56,20 +61,24 @@ class ContactFragment : Fragment() {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf<String>("android.permission.READ_CONTACTS"), 100)
         }
 
-        val contactList = getContacts()
-        val adapter = ContactsAdapter(contactList, requireActivity())
-        adapter.itemClick = object : ContactsAdapter.ItemClick {
-            override fun onClick(view: View, position: Int) {
-                val intent = Intent(requireActivity(), ContactDetailActivity::class.java)
-                val contact: Contact = contactList[position]
-                intent.putExtra("name", contact.name)
-                intent.putExtra("number", contact.number)
-                intent.putExtra("imageUri", contact.imageUri)
-                startActivityForResult(intent, 101)
+        CoroutineScope(IO).launch {
+            val contactList = getContacts()
+            withContext(Main) {
+                val adapter = ContactsAdapter(contactList, requireActivity())
+                adapter.itemClick = object : ContactsAdapter.ItemClick {
+                    override fun onClick(view: View, position: Int) {
+                        val intent = Intent(requireActivity(), ContactDetailActivity::class.java)
+                        val contact: Contact = contactList[position]
+                        intent.putExtra("name", contact.name)
+                        intent.putExtra("number", contact.number)
+                        intent.putExtra("imageUri", contact.imageUri)
+                        startActivityForResult(intent, 101)
+                    }
+                }
+                binding.rvContacts.layoutManager = LinearLayoutManager(activity)
+                binding.rvContacts.adapter = adapter
             }
         }
-        binding.rvContacts.layoutManager = LinearLayoutManager(activity)
-        binding.rvContacts.adapter = adapter
 
         return view
     }
@@ -79,7 +88,7 @@ class ContactFragment : Fragment() {
         _binding = null
     }
 
-    private fun getContacts(): ArrayList<Contact> {
+    private suspend fun getContacts(): ArrayList<Contact> {
         val contactList = ArrayList<Contact>()
 
         val contactCursor = activity?.contentResolver!!.query(ContactsContract.CommonDataKinds.Phone.CONTENT_URI, null, null,null, null)
@@ -94,8 +103,6 @@ class ContactFragment : Fragment() {
                         contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
                     val imageUri =
                         contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
-
-                    Log.d("ContactFragment", "imageUri: $imageUri")
 
                     contactList.add(Contact(id.toInt(), name, phoneNumber, imageUri))
                 } catch (e: NumberFormatException) {
