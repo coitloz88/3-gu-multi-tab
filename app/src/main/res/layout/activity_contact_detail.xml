@@ -110,18 +110,10 @@
                     android:id="@+id/fab_message"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginEnd="20dp"
                     android:layout_weight="1"
                     android:clickable="true"
                     app:srcCompat="@drawable/ic_message" />
 
-                <com.google.android.material.floatingactionbutton.FloatingActionButton
-                    android:id="@+id/fab_video_call"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_weight="1"
-                    android:clickable="true"
-                    app:srcCompat="@drawable/ic_video_call" />
             </LinearLayout>
         </LinearLayout>
     </androidx.cardview.widget.CardView>
