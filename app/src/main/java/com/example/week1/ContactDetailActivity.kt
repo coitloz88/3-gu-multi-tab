@@ -5,8 +5,9 @@ import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
+import android.util.Patterns
 import android.view.MenuItem
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
 import com.example.week1.databinding.ActivityContactDetailBinding
@@ -25,6 +26,7 @@ class ContactDetailActivity : AppCompatActivity() {
         val name = intent.getStringExtra("name")
         val number = intent.getStringExtra("number")
         val imageUri = intent.getStringExtra("imageUri")
+        val email = intent.getStringExtra("email")
 
         binding.tvName.text = name
         binding.tvPhoneNumber.text = number
@@ -45,6 +47,16 @@ class ContactDetailActivity : AppCompatActivity() {
         binding.fabMessage.setOnClickListener{
             val messageIntent = Intent(Intent.ACTION_VIEW, Uri.parse("sms:$number"))
             startActivity(messageIntent)
+        }
+
+        binding.fabEmail.setOnClickListener{
+            if(email == null || !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "이메일 정보를 확인하세요", Toast.LENGTH_SHORT).show()
+            } else {
+                val emailIntent = Intent(Intent.ACTION_SEND)
+                emailIntent.putExtra(Intent.EXTRA_EMAIL, email)
+                startActivity(emailIntent)
+            }
         }
     }
 

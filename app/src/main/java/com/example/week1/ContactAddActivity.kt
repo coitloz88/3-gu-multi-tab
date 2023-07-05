@@ -5,6 +5,7 @@ import android.content.pm.PackageManager
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.provider.ContactsContract
+import android.util.Patterns
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -36,9 +37,12 @@ class ContactAddActivity : AppCompatActivity() {
             val phoneNumber: String = binding.etPhoneNumber.text.toString()
             val email: String = binding.etEmail.text.toString()
 
-            if(name.length * phoneNumber.length * email.length == 0) {
+            if(name.isEmpty() && phoneNumber.isEmpty()) {
                 Toast.makeText(this, "올바른 정보를 입력해주세요", Toast.LENGTH_SHORT).show()
-            } else {
+            } else if (email.isNotEmpty() && !Patterns.EMAIL_ADDRESS.matcher(email).matches()) {
+                Toast.makeText(this, "이메일 정보를 확인하세요", Toast.LENGTH_SHORT).show()
+            }
+            else {
                 val list = ArrayList<ContentProviderOperation>()
                 list.add( // rawContact 추가
                     ContentProviderOperation.newInsert(ContactsContract.RawContacts.CONTENT_URI)
