@@ -11,4 +11,8 @@
     <string name="zero">0</string>
     <string name="get_result_of_conversion">Get Result of Conversion</string>
     <string name="large_text"></string>
+    <string name="enter_name">Enter name</string>
+    <string name="enter_phone_number">Enter phone number</string>
+    <string name="enter_email">Enter email</string>
+    <string name="delete_contact">연락처 삭제</string>
 </resources>

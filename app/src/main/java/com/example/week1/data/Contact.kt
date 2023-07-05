@@ -7,7 +7,8 @@ data class Contact(
     val id: Int,
     val name: String,
     val number: String,
-    val imageUri: String?
+    val imageUri: String?,
+    val email: String?
 )
 
 /*

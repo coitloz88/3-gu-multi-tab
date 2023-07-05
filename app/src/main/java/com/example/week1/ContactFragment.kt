@@ -62,6 +62,16 @@ class ContactFragment : Fragment() {
             ActivityCompat.requestPermissions(requireActivity(), arrayOf<String>("android.permission.READ_CONTACTS"), 100)
         }
 
+        binding.fabAddContact.setOnClickListener {
+            startActivity(Intent(requireActivity(), ContactAddActivity::class.java))
+        }
+
+        return view
+    }
+
+    override fun onResume() {
+        super.onResume()
+
         CoroutineScope(IO).launch {
             val contactList = getContacts()
             withContext(Main) {
@@ -70,9 +80,11 @@ class ContactFragment : Fragment() {
                     override fun onClick(view: View, position: Int) {
                         val intent = Intent(requireActivity(), ContactDetailActivity::class.java)
                         val contact: Contact = contactList[position]
+                        intent.putExtra("id", contact.id.toLong())
                         intent.putExtra("name", contact.name)
                         intent.putExtra("number", contact.number)
                         intent.putExtra("imageUri", contact.imageUri)
+                        intent.putExtra("email", contact.email)
                         startActivityForResult(intent, 101)
                     }
                 }
@@ -80,8 +92,6 @@ class ContactFragment : Fragment() {
                 binding.rvContacts.adapter = adapter
             }
         }
-
-        return view
     }
 
     override fun onDestroyView() {
@@ -104,8 +114,10 @@ class ContactFragment : Fragment() {
                         contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.NUMBER))
                     val imageUri =
                         contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Phone.PHOTO_URI))
+                    val email =
+                        contactCursor.getString(contactCursor.getColumnIndexOrThrow(ContactsContract.CommonDataKinds.Email.ADDRESS))
 
-                    contactList.add(Contact(id.toInt(), name, phoneNumber, imageUri))
+                    contactList.add(Contact(id.toInt(), name, phoneNumber, imageUri, email))
                 } catch (e: NumberFormatException) {
                     Log.e(TAG, e.toString())
                 } catch (e: IllegalArgumentException) {
@@ -117,7 +129,6 @@ class ContactFragment : Fragment() {
 
         return contactList
     }
-
 
     companion object {
         /**
