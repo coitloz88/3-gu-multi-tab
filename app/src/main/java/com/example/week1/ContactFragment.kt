@@ -80,6 +80,7 @@ class ContactFragment : Fragment() {
                     override fun onClick(view: View, position: Int) {
                         val intent = Intent(requireActivity(), ContactDetailActivity::class.java)
                         val contact: Contact = contactList[position]
+                        intent.putExtra("id", contact.id.toLong())
                         intent.putExtra("name", contact.name)
                         intent.putExtra("number", contact.number)
                         intent.putExtra("imageUri", contact.imageUri)

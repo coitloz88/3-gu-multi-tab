@@ -1,11 +1,17 @@
 package com.example.week1
 
+import android.content.ContentProviderOperation
 import android.content.Intent
+import android.content.OperationApplicationException
 import android.content.pm.PackageManager
 import android.net.Uri
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.os.RemoteException
+import android.provider.ContactsContract
+import android.util.Log
 import android.util.Patterns
+import android.view.Menu
 import android.view.MenuItem
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
@@ -15,6 +21,7 @@ import com.example.week1.utils.getDrawableFromUri
 
 class ContactDetailActivity : AppCompatActivity() {
     private lateinit var binding: ActivityContactDetailBinding
+    private var id: Long = 0
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityContactDetailBinding.inflate(layoutInflater)
@@ -23,6 +30,7 @@ class ContactDetailActivity : AppCompatActivity() {
         setSupportActionBar(binding.toolbar)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
 
+        id = intent.getLongExtra("id", 0)
         val name = intent.getStringExtra("name")
         val number = intent.getStringExtra("number")
         val imageUri = intent.getStringExtra("imageUri")
@@ -60,6 +68,37 @@ class ContactDetailActivity : AppCompatActivity() {
         }
     }
 
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+        menuInflater.inflate(R.menu.contact_detail_menu, menu)
+        return true
+    }
+
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        when(item.itemId) {
+            android.R.id.home -> {
+                finish()
+                return true
+            }
+            R.id.action_delete -> {
+                if(id.compareTo(0) == 0) {
+                    Toast.makeText(this, "연락처 삭제 실패", Toast.LENGTH_SHORT).show()
+                    Log.e(TAG, "contact id is 0!")
+                    return false
+                } else {
+                    deleteContact(id)
+                    finish()
+                    return true
+                }
+            }
+        }
+        return super.onOptionsItemSelected(item)
+    }
+
+    override fun onBackPressed() {
+        super.onBackPressed()
+        finish()
+    }
+
     private fun checkPermissions() {
         val statusCall = ContextCompat.checkSelfPermission(this, "android.permission.CALL_PHONE")
         if(statusCall == PackageManager.PERMISSION_DENIED) {
@@ -71,18 +110,23 @@ class ContactDetailActivity : AppCompatActivity() {
         }
     }
 
-    override fun onOptionsItemSelected(item: MenuItem): Boolean {
-        when(item.itemId) {
-            android.R.id.home -> {
-                finish()
-                return true
-            }
+    private fun deleteContact(contactId: Long) {
+        val ops = ArrayList<ContentProviderOperation>()
+        val args = arrayOf<String>(contactId.toString())
+        ops.add(ContentProviderOperation.newDelete(ContactsContract.RawContacts.CONTENT_URI)
+            .withSelection(ContactsContract.RawContacts.CONTACT_ID + "=?", args)
+            .build())
+        try {
+            contentResolver.applyBatch(ContactsContract.AUTHORITY, ops)
+            Toast.makeText(this, "연락처를 삭제했습니다", Toast.LENGTH_SHORT).show()
+        } catch (e: RemoteException) {
+            e.printStackTrace()
+        } catch (e: OperationApplicationException) {
+            e.printStackTrace()
         }
-        return super.onOptionsItemSelected(item)
     }
 
-    override fun onBackPressed() {
-        super.onBackPressed()
-        finish()
+    companion object {
+        private const val TAG = "ContactDetailActivity"
     }
 }
