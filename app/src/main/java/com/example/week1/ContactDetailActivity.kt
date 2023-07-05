@@ -29,8 +29,6 @@ class ContactDetailActivity : AppCompatActivity() {
         binding.tvName.text = name
         binding.tvPhoneNumber.text = number
 
-        Log.d("Phone Number", number.toString())
-
         if(imageUri != null) {
             binding.ivProfile.setImageDrawable(getDrawableFromUri(this, imageUri))
         } else {

@@ -39,6 +39,7 @@ class ContactFragment : Fragment() {
 
     private var _binding: FragmentContactBinding? = null
     private val binding get() = _binding!!
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         arguments?.let {
@@ -106,9 +107,9 @@ class ContactFragment : Fragment() {
 
                     contactList.add(Contact(id.toInt(), name, phoneNumber, imageUri))
                 } catch (e: NumberFormatException) {
-                    Log.e("ContactFragment", e.toString())
+                    Log.e(TAG, e.toString())
                 } catch (e: IllegalArgumentException) {
-                    Log.e("ContactFragment", e.toString())
+                    Log.e(TAG, e.toString())
                 }
             }
             contactCursor.close()
@@ -136,5 +137,7 @@ class ContactFragment : Fragment() {
                     putString(ARG_PARAM2, param2)
                 }
             }
+
+        private const val TAG = "ContactFragment"
     }
 }
