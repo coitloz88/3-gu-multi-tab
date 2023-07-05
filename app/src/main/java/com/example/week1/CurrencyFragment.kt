@@ -10,8 +10,7 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import android.widget.EditText
-import android.widget.TextView
+import android.widget.Toast
 import com.example.week1.databinding.FragmentCurrencyBinding
 import com.example.week1.retrofit.CurrencyService
 import com.example.week1.retrofit.RetrofitClass
@@ -20,13 +19,6 @@ import retrofit2.Call
 import retrofit2.Callback
 import retrofit2.Response
 
-// the fragment initialization parameters, e.g. ARG_ITEM_NUMBER
-
-/**
- * A simple [Fragment] subclass.
- * Use the [CurrencyFragment.newInstance] factory method to
- * create an instance of this fragment.
- */
 class CurrencyFragment : Fragment() {
     private var _binding: FragmentCurrencyBinding? = null
     private val binding get() = _binding!!
@@ -37,7 +29,6 @@ class CurrencyFragment : Fragment() {
     ): View {
         // Inflate the layout for this fragment
         _binding = FragmentCurrencyBinding.inflate(inflater, container, false)
-        val view = binding.root
 
         val adapterFrom = ArrayAdapter.createFromResource(
             requireContext(),
@@ -99,7 +90,7 @@ class CurrencyFragment : Fragment() {
             }
 
             else {
-                onDestroyView()
+                Toast.makeText(requireContext(), "Invalid input", Toast.LENGTH_SHORT).show()
             }
 
         }

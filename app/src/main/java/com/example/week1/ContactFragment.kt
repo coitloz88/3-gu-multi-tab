@@ -81,6 +81,10 @@ class ContactFragment : Fragment() {
             }
         }
 
+        binding.fabAddContact.setOnClickListener {
+            startActivity(Intent(requireActivity(), ContactAddActivity::class.java))
+        }
+
         return view
     }
 
@@ -117,7 +121,6 @@ class ContactFragment : Fragment() {
 
         return contactList
     }
-
 
     companion object {
         /**
