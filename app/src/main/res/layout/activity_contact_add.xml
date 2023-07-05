@@ -22,9 +22,9 @@
         android:id="@+id/linearLayout"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="12dp"
+        android:layout_marginStart="8dp"
         android:layout_marginTop="12dp"
-        android:layout_marginEnd="12dp"
+        android:layout_marginEnd="8dp"
         android:orientation="vertical"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -34,21 +34,25 @@
             android:id="@+id/card_name_wrapper"
             android:layout_width="match_parent"
             android:layout_height="52dp"
-            app:cardCornerRadius="10dp"
-            android:layout_marginBottom="16dp">
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginTop="2dp"
+            android:layout_marginBottom="16dp"
+            app:cardCornerRadius="10dp">
 
             <EditText
                 android:id="@+id/et_name"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:background="@android:color/transparent"                android:drawableStart="@drawable/ic_person"
+                android:layout_marginStart="8dp"
+                android:layout_marginEnd="8dp"
+                android:background="@android:color/transparent"
+                android:drawableStart="@drawable/ic_person"
                 android:drawablePadding="8dp"
                 android:ems="10"
                 android:hint="@string/enter_name"
                 android:inputType="textPersonName"
-                android:textSize="20sp"
-                android:layout_marginStart="8dp"
-                android:layout_marginEnd="8dp"/>
+                android:textSize="20sp" />
         </androidx.cardview.widget.CardView>
 
         <androidx.cardview.widget.CardView
@@ -56,6 +60,8 @@
             android:layout_width="match_parent"
             android:layout_height="52dp"
             app:cardCornerRadius="10dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
             android:layout_marginBottom="16dp">
 
             <EditText
@@ -76,6 +82,9 @@
             android:id="@+id/card_email_wrapper"
             android:layout_width="match_parent"
             android:layout_height="52dp"
+            android:layout_marginStart="4dp"
+            android:layout_marginEnd="4dp"
+            android:layout_marginBottom="4dp"
             app:cardCornerRadius="10dp">
 
             <EditText
